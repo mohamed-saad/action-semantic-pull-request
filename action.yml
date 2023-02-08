@@ -21,7 +21,7 @@ inputs:
     description: 'Configure which scopes are disallowed in PR titles (newline delimited).'
     required: false
   subjectPattern:
-    description: "Configure additional validation for the subject based on a regex. E.g. '^(?![A-Z]).+$' ensures the subject doesn't start with an uppercase character."
+    description: "Configure additional validation for the subject based on a regex. E.g. '^(?![A-Z]).+$' ensures the subject starts with a correct case."
     required: false
   subjectPatternError:
     description: "If `subjectPattern` is configured, you can use this property to override the default error message that is shown when the pattern doesn't match. The variables `subject` and `title` can be used within the message."

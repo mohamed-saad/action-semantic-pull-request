@@ -37437,14 +37437,33 @@ module.exports = async function validatePrTitle(
     return disallowScopes && disallowScopes.includes(s);
   }
 
-  if (!result.type) {
+  let isTypePresent = false;
+  for (var key in types) {
+    let typePrefix = types[key]
+    if (prTitle.startsWith(typePrefix)) {
+      isTypePresent = true;
+      break;
+    }
+  }
+
+  if (!isTypePresent) {
     raiseError(
-      `No release type found in pull request title "${prTitle}". Add a prefix to indicate what kind of release this pull request corresponds to. For reference, see https://www.conventionalcommits.org/\n\n${printAvailableTypes()}`
+      `No release type found in pull request title "${prTitle}". \nAdd a prefix to indicate what kind of release this pull request corresponds to. \nFor reference, see https://www.conventionalcommits.org/\n\n${printAvailableTypes()}`
     );
   }
 
-  if (!result.subject) {
-    raiseError(`No subject found in pull request title "${prTitle}".`);
+  if (requireScope && !result.scope) {
+    let message = `Jira ticket ID can not be found in pull request title "${prTitle}".`;
+    if (scopes) {
+      message += ` Use one of the available scopes: ${scopes.join(', ')}.`;
+    }
+    raiseError(message);
+  }
+
+  if (!result.type) {
+    raiseError(
+      `No release type found in pull request title "${prTitle}". \nAdd a prefix to indicate what kind of release this pull request corresponds to. \nFor reference, see https://www.conventionalcommits.org/\n\n${printAvailableTypes()}`
+    );
   }
 
   if (!types.includes(result.type)) {
@@ -37454,13 +37473,9 @@ module.exports = async function validatePrTitle(
       }" found in pull request title "${prTitle}". \n\n${printAvailableTypes()}`
     );
   }
-
-  if (requireScope && !result.scope) {
-    let message = `No scope found in pull request title "${prTitle}".`;
-    if (scopes) {
-      message += ` Use one of the available scopes: ${scopes.join(', ')}.`;
-    }
-    raiseError(message);
+  
+  if (!result.subject) {
+    raiseError(`No subject found in pull request title "${prTitle}".`);
   }
 
   const givenScopes = result.scope
