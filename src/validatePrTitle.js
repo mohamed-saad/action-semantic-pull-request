@@ -63,7 +63,7 @@ module.exports = async function validatePrTitle(
   
   if (!isTypePresent) {
     raiseError(
-      `No release type found in pull request title "${prTitle}". \nAdd a prefix to indicate what kind of release this pull request corresponds to. \nFor reference, see https://www.conventionalcommits.org/\n\n${printAvailableTypes()}`
+      `XXXXXXXXXXXX release type found in pull request title "${prTitle}". \nAdd a prefix to indicate what kind of release this pull request corresponds to. \nFor reference, see https://www.conventionalcommits.org/\n\n${printAvailableTypes()}`
     );
   }
 

@@ -37445,11 +37445,15 @@ module.exports = async function validatePrTitle(
       break;
     }
   }
-
+  
   if (!isTypePresent) {
     raiseError(
-      `No release type found in pull request title "${prTitle}". \nAdd a prefix to indicate what kind of release this pull request corresponds to. \nFor reference, see https://www.conventionalcommits.org/\n\n${printAvailableTypes()}`
+      `XXXXXXXXXXXX release type found in pull request title "${prTitle}". \nAdd a prefix to indicate what kind of release this pull request corresponds to. \nFor reference, see https://www.conventionalcommits.org/\n\n${printAvailableTypes()}`
     );
+  }
+
+  if (!result.subject) {
+    raiseError(`No subject found in pull request title "${prTitle}".`);
   }
 
   if (requireScope && !result.scope) {
@@ -37472,10 +37476,6 @@ module.exports = async function validatePrTitle(
         result.type
       }" found in pull request title "${prTitle}". \n\n${printAvailableTypes()}`
     );
-  }
-  
-  if (!result.subject) {
-    raiseError(`No subject found in pull request title "${prTitle}".`);
   }
 
   const givenScopes = result.scope
