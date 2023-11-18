@@ -37119,6 +37119,7 @@ module.exports = async function run() {
       scopes,
       requireScope,
       disallowScopes,
+      requireType,
       wip,
       subjectPattern,
       subjectPatternError,
@@ -37178,6 +37179,7 @@ module.exports = async function run() {
           scopes,
           requireScope,
           disallowScopes,
+          requireType,
           subjectPattern,
           subjectPatternError,
           headerPattern,
@@ -37220,6 +37222,7 @@ module.exports = async function run() {
                 scopes,
                 requireScope,
                 disallowScopes,
+                requireType,
                 subjectPattern,
                 subjectPatternError,
                 headerPattern,
@@ -37307,6 +37310,11 @@ module.exports = function parseConfig() {
     disallowScopes = ConfigParser.parseEnum(process.env.INPUT_DISALLOWSCOPES);
   }
 
+  let requireType;
+  if (process.env.INPUT_REQUIRETYPE) {
+    requireType = ConfigParser.parseBoolean(process.env.INPUT_REQUIRETYPE);
+  }
+
   let subjectPattern;
   if (process.env.INPUT_SUBJECTPATTERN) {
     subjectPattern = ConfigParser.parseString(process.env.INPUT_SUBJECTPATTERN);
@@ -37365,6 +37373,7 @@ module.exports = function parseConfig() {
     scopes,
     requireScope,
     disallowScopes,
+    requireType,
     wip,
     subjectPattern,
     subjectPatternError,
@@ -37398,6 +37407,7 @@ module.exports = async function validatePrTitle(
     scopes,
     requireScope,
     disallowScopes,
+    requireType,
     subjectPattern,
     subjectPatternError,
     headerPattern,
@@ -37445,11 +37455,15 @@ module.exports = async function validatePrTitle(
       break;
     }
   }
-
-  if (!isTypePresent) {
+  
+  if (requireType && !isTypePresent) {
     raiseError(
       `No release type found in pull request title "${prTitle}". \nAdd a prefix to indicate what kind of release this pull request corresponds to. \nFor reference, see https://www.conventionalcommits.org/\n\n${printAvailableTypes()}`
     );
+  }
+
+  if (!result.subject) {
+    raiseError(`No subject found in pull request title "${prTitle}".\nSubject must follow the following pattern "${subjectPattern}".`);
   }
 
   if (requireScope && !result.scope) {
@@ -37460,22 +37474,18 @@ module.exports = async function validatePrTitle(
     raiseError(message);
   }
 
-  if (!result.type) {
+  if (requireType && !result.type) {
     raiseError(
       `No release type found in pull request title "${prTitle}". \nAdd a prefix to indicate what kind of release this pull request corresponds to. \nFor reference, see https://www.conventionalcommits.org/\n\n${printAvailableTypes()}`
     );
   }
 
-  if (!types.includes(result.type)) {
+  if (requireType && !types.includes(result.type)) {
     raiseError(
       `Unknown release type "${
         result.type
       }" found in pull request title "${prTitle}". \n\n${printAvailableTypes()}`
     );
-  }
-  
-  if (!result.subject) {
-    raiseError(`No subject found in pull request title "${prTitle}".`);
   }
 
   const givenScopes = result.scope

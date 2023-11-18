@@ -20,6 +20,9 @@ inputs:
   disallowScopes:
     description: 'Configure which scopes are disallowed in PR titles (newline delimited).'
     required: false
+  requireType:
+    description: "Configure that a type must always be provided at the beginning of the PR name E.g. 'feat', 'fix', 'build'"
+    required: false
   subjectPattern:
     description: "Configure additional validation for the subject based on a regex. E.g. '^(?![A-Z]).+$' ensures the subject starts with a correct case."
     required: false
