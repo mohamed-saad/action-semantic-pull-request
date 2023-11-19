@@ -16,6 +16,15 @@ Note that since PR titles only have a single line, you have to use the `!` synta
 
 See [Conventional Commits](https://www.conventionalcommits.org/) for more examples.
 
+## Building and releasing the action
+
+```
+yarn build
+```
+
+The resulting (generated) code requires pushing to GitHub, after which a new release can be drafted with this new code as source. Once the PR is merged, a new release off main branch can be drafted with a major.minor.patch version. A release off the PR branch can be drafted with a major.minor.patch-rcnumber version or similar. To use the new action functionality on GitHub, the action needs to be published on the GitHub Marketplace (during release drafting).
+
+
 ## Installation
 
 1. If your goal is to create squashed commits that will be used for automated releases, you'll want to configure your GitHub repository to [use the squash & merge strategy](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/configuring-commit-squashing-for-pull-requests) and tick the option "Default to PR title for squash merge commits".
